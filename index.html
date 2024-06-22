@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LeetCode Data</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="userData" class="hidden">
+        <h1>User Data</h1>
+        <div class="user-info">
+            <p><strong>Username:</strong> <span id="userName"></span></p>
+            <p><strong>Solved:</strong> <span id="solved"></span></p>
+            <p><strong>Acceptance Rate:</strong> <span id="acceptanceRate"></span></p>
+            <p><strong>Total Submissions:</strong> <span id="totalSubmissions"></span></p>
+            <p><strong>Easy Problems Solved:</strong> <span id="easyProblems"></span></p>
+            <p><strong>Medium Problems Solved:</strong> <span id="mediumProblems"></span></p>
+            <p><strong>Hard Problems Solved:</strong> <span id="hardProblems"></span></p>
+        </div>
+    </div>
+
+    <script>
+        async function fetchLeetCodeData() {
+    try {
+        const response = await fetch(`https://leetcode-stats-api.herokuapp.com/username`);
+        const data = await response.json();
+
+        if (data.error) {
+            alert('User not found!');
+            return;
+        }
+
+        document.getElementById('userName').innerText = data.username || 'N/A';
+        document.getElementById('solved').innerText = data.totalSolved || 'N/A';
+        document.getElementById('acceptanceRate').innerText = `${data.acceptanceRate || 'N/A'}%`;
+        document.getElementById('totalSubmissions').innerText = data.totalSubmissions || 'N/A';
+
+        if (data.solvedByDifficulty) {
+            document.getElementById('easyProblems').innerText = data.solvedByDifficulty.easy || 'N/A';
+            document.getElementById('mediumProblems').innerText = data.solvedByDifficulty.medium || 'N/A';
+            document.getElementById('hardProblems').innerText = data.solvedByDifficulty.hard || 'N/A';
+        } else {
+            document.getElementById('easyProblems').innerText = 'N/A';
+            document.getElementById('mediumProblems').innerText = 'N/A';
+            document.getElementById('hardProblems').innerText = 'N/A';
+        }
+
+        document.getElementById('userData').classList.remove('hidden');
+    } catch (error) {
+        console.error('Error fetching user data:', error);
+    }
+}
+
+window.addEventListener('load', fetchLeetCodeData);
+
+
+    </script>
+</body>
+</html>
